@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:trabalho_mobile/model/equacao.dart';
+import 'package:trabalho_mobile/database/database_provider.dart';
 import 'dart:math';
+
+import 'cadastro_equacoes.dart';
 
 class EquacoesPage extends StatefulWidget {
   @override
@@ -11,18 +14,7 @@ class _EquacoesPageState extends State<EquacoesPage> {
   late Equacao _equacaoAtual;
   TextEditingController _controllerResposta = TextEditingController();
 
-  final _equacoes = <Equacao>[
-    Equacao(id: 1, equacao: "{ [ (20 * 12) + 15] / 3 }", resultado: 85),
-    Equacao(id: 2, equacao: "{ [ (19 * 9) / 3] + 158 }", resultado: 215),
-    Equacao(id: 3, equacao: "( 5464 * 559 ) - 1566)", resultado: 3051710),
-    Equacao(id: 4, equacao: "[ (26548 / 2) * 155 ] + 158", resultado: 2056728),
-    Equacao(id: 5, equacao: "{ [ (24 * 8) / 4] + 267 }", resultado: 315),
-    Equacao(id: 6, equacao: "( 7345 * 621 ) - 2345", resultado: 4558300),
-    Equacao(id: 7, equacao: "[ (38572 / 4) * 178 ] + 356", resultado: 1718190),
-    Equacao(id: 8, equacao: "{ [ (25 * 8) / 2] + 167 }", resultado: 267),
-    Equacao(id: 9, equacao: "( 8923 * 458 ) - 2589", resultado: 4084545),
-    Equacao(id: 10, equacao: "[ (49632 / 3) * 245 ] + 478", resultado: 4047758),
-  ];
+  final _dao = EquacaoDao(); // Instância do DAO para lidar com as operações do banco de dados.
 
   @override
   void initState() {
@@ -45,7 +37,7 @@ class _EquacoesPageState extends State<EquacoesPage> {
       title: Text(
         '2 + 2',
         style: TextStyle(
-          fontWeight: FontWeight.bold, // Define o texto em negrito
+          fontWeight: FontWeight.bold,
         ),
       ),
       centerTitle: true,
@@ -79,19 +71,31 @@ class _EquacoesPageState extends State<EquacoesPage> {
             onPressed: _validarResultado,
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
-              foregroundColor: MaterialStateProperty.all<Color>(Colors.black),// Define a cor de fundo do botão
+              foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
             ),
             child: Text('Validar Resposta'),
+          ),
+          ElevatedButton(
+            onPressed: _abrirCadastro,
+            child: Text('Cadastrar Equação'),
           ),
         ],
       ),
     );
   }
 
-  void _sortearEquacao() {
-    var random = Random();
-    int num = random.nextInt(10);
-    _equacaoAtual = _equacoes[num];
+  void _abrirCadastro() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => CadastroEquacaoPage()),
+    );
+  }
+
+  void _sortearEquacao() async {
+    final List<Equacao> equacoes = await _dao.listarEquacoes();
+    final random = Random();
+    final int num = random.nextInt(equacoes.length);
+    _equacaoAtual = equacoes[num];
     setState(() {}); // Atualiza o estado para refletir a nova equação sorteada
   }
 
@@ -99,12 +103,10 @@ class _EquacoesPageState extends State<EquacoesPage> {
     String resposta = _controllerResposta.text;
     int respostaInt = int.tryParse(resposta) ?? 0;
     if (respostaInt == _equacaoAtual.resultado) {
-      // Resposta correta
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Resposta correta!')),
       );
     } else {
-      // Resposta incorreta
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Resposta incorreta! Tente novamente.')),
       );
