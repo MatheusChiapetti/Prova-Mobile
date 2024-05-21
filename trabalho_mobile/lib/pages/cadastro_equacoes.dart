@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:trabalho_mobile/model/equacao.dart';
-import 'package:trabalho_mobile/dao/equacao_dao.dart'; // Importando o DAO de Equacao
 
 class CadastroEquacaoPage extends StatefulWidget {
   @override

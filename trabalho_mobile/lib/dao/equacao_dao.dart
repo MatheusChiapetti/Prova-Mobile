@@ -1,4 +1,3 @@
-import 'package:trabalho_mobile/database/database_provider.dart';
 import '../model/equacao.dart';
 
 class EquacaoDao {

@@ -68,6 +68,8 @@ class EquacaoDao {
     final List<Map<String, dynamic>> equacoes = await db.query(Equacao.nome_tabela);
     return equacoes.map((e) => Equacao.fromMap(e)).toList();
   }
+
+  inserirEquacao(Equacao novaEquacao) {}
 }
 
 class DatabaseProvider {
