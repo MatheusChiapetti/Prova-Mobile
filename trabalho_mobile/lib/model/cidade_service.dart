@@ -6,16 +6,6 @@ import '../model/cidade.dart';
 class CidadeService {
   static const _baseUrl = 'http://cloud.colegiomaterdei.com.br:8090/cidades';
 
-  Future<List<Cidade>> findCidade() async {
-    final uri = Uri.parse(_baseUrl);
-    final Response response = await get(uri);
-    if(response.statusCode != 200 || response.body.isEmpty) {
-      throw Exception();
-    }
-
-    final decodeBody = json.decoder(response.body) as List;
-    return decodeBody.map((e) => Cidade.fromJson(Map<String, dynamic>.from(e))).toList();
-  }
 
   Future<void> saveCidade(Cidade cidade) async{
     final uri = Uri.parse(_baseUrl);

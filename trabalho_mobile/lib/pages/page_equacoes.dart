@@ -30,21 +30,13 @@ class _EquacoesPageState extends State<EquacoesPage> {
       body: _criarBody(),
 
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _fragment,
+        currentIndex: 1,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: ConsultaCepFragment.title),
-          BottomNavigationBarItem(icon: Icon(Icons.list), label: CidadesFragment.title),
+          BottomNavigationBarItem(icon: Icon(Icons.search)),
+          BottomNavigationBarItem(icon: Icon(Icons.list)),
         ],
-        onTap: (int newIndex) {
-          if(newIndex != _fragment) {
-            setState(() {
-              _fragment = newIndex;
-            });
-          }
-
-        },
       ),
-      floatingActionButton: _buildFloatingActionButton(),
+      floatingActionButton: null,
     );
   }
 
@@ -128,19 +120,6 @@ class _EquacoesPageState extends State<EquacoesPage> {
         SnackBar(content: Text('Resposta incorreta! Tente novamente.')),
       );
     }
-  }
-
-  Widget _buildBody() => _fragment == 0 ? ConsultaCepFragment() : CidadesFragment();
-
-  Widget? _buildFloatingActionButton() {
-    if(_fragment == 0) {
-      return null;
-    }
-    return FloatingActionButton(
-      onPressed: null,
-      child: Icon(Icons.add),
-      tooltip: 'Cadastrar Cidade',
-    );
   }
 
   @override
